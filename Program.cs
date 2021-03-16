@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using Nefarius.ViGEm.Client;
@@ -12,15 +13,14 @@ namespace VirtualHapticRouter
 {
     class Program
     {
+        private static readonly HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
             ViGEmClient client = new ViGEmClient();
             IXbox360Controller controller = client.CreateXbox360Controller();
-            controller.FeedbackReceived += FeedbackEventHandler;
+            controller.FeedbackReceived += new Xbox360FeedbackReceivedEventHandler(FeedbackEventHandler);
             controller.Connect();
             Console.WriteLine("Virtual gamepad connected");
-            Console.WriteLine(controller.AutoSubmitReport);
-            Thread.Sleep(5000);
             
             while (true)
             {
@@ -39,7 +39,25 @@ namespace VirtualHapticRouter
         }
         static void FeedbackEventHandler(object sender, Xbox360FeedbackReceivedEventArgs e)
         {
-            Console.WriteLine("Rumble");
+            if (e.SmallMotor > 0)
+            {
+                Console.WriteLine(e.SmallMotor);
+                var values = new Dictionary<string, string>
+                {
+                    { "SmallMotor", e.SmallMotor.ToString() },
+                    { "LargeMotor", e.LargeMotor.ToString() }
+                };
+                var content = new FormUrlEncodedContent(values);
+
+                try
+                {
+                    var response = client.PostAsync("http://localhost:5000/", content);
+                } catch (Exception netErr)
+                {
+                    Console.WriteLine(netErr);
+                    throw netErr;
+                }
+            }
         }
     }
 }
