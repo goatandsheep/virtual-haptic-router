@@ -1,9 +1,0 @@
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\bin\Debug\VirtualHapticRouter.exe.config
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\bin\Debug\VirtualHapticRouter.exe
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\bin\Debug\VirtualHapticRouter.pdb
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\bin\Debug\Nefarius.ViGEm.Client.dll
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\obj\Debug\VirtualHapticRouter.csprojAssemblyReference.cache
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\obj\Debug\VirtualHapticRouter.csproj.CoreCompileInputs.cache
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\obj\Debug\VirtualHapticRouter.csproj.CopyComplete
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\obj\Debug\VirtualHapticRouter.exe
-C:\Users\veree\Documents\Projects\virtual-haptic-router\VirtualHapticRouter\obj\Debug\VirtualHapticRouter.pdb
