@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualHapticRouter", "VirtualHapticRouter.csproj", "{8327A58D-FDFA-4DCF-9CEE-0F9D713F2AE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8327A58D-FDFA-4DCF-9CEE-0F9D713F2AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8327A58D-FDFA-4DCF-9CEE-0F9D713F2AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8327A58D-FDFA-4DCF-9CEE-0F9D713F2AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8327A58D-FDFA-4DCF-9CEE-0F9D713F2AE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9F6E24F1-B52E-4D25-A66E-94718CB08A2F}
+	EndGlobalSection
+EndGlobal
