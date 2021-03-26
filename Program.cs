@@ -7,6 +7,7 @@ using System.Threading;
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
+// using Nefarius.ViGEm.Client.Targets.DualShock4;
 using Nefarius.ViGEm.Client.Exceptions;
 using InputInterceptorNS;
 
@@ -248,7 +249,7 @@ namespace VirtualHapticRouter
             keyboardHook.Dispose();
             mouseHook.Dispose();
             controller.Disconnect();
-            /*
+            
             while (true)
             {
                 try {
@@ -263,7 +264,7 @@ namespace VirtualHapticRouter
                     throw err;
                 }
             }
-            */
+            
         }
         static void FeedbackEventHandler(object sender, Xbox360FeedbackReceivedEventArgs e)
         {
@@ -276,6 +277,8 @@ namespace VirtualHapticRouter
                     // { "Value2", e.LargeMotor.ToString() }
                 };
                 var content = new FormUrlEncodedContent(values);
+                var ontext = "███ ███ ███";
+                var offtext = "";
 
                 try
                 {
