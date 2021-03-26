@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Text;
 using System.Threading;
 using Nefarius.ViGEm.Client;
@@ -9,6 +10,8 @@ using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
 // using Nefarius.ViGEm.Client.Targets.DualShock4;
 using Nefarius.ViGEm.Client.Exceptions;
+using OBSWebsocketDotNet;
+using OBSWebsocketDotNet.Types;
 using InputInterceptorNS;
 
 namespace VirtualHapticRouter
@@ -16,6 +19,10 @@ namespace VirtualHapticRouter
     class Program
     {
         private static readonly HttpClient client = new HttpClient();
+        private static CancellationTokenSource timeout;
+        private static FormUrlEncodedContent onContent;
+        private static FormUrlEncodedContent offContent;
+        protected static OBSWebsocket _obs;
         static void Main(string[] args)
         {
             ViGEmClient client = new ViGEmClient();
@@ -23,6 +30,24 @@ namespace VirtualHapticRouter
             // Int32 INTENSITY = 32767; // TODO: experiment with various intensities
             controller.FeedbackReceived += new Xbox360FeedbackReceivedEventHandler(FeedbackEventHandler);
             controller.Connect();
+
+            _obs = new OBSWebsocket();
+
+            _obs.Connected += onConnect;
+            _obs.Disconnected += onDisconnect;
+
+            _obs.StreamStatus += onStreamData;
+
+            var onValues = new Dictionary<string, string>
+                    {
+                        { "text", "███ ███ ███" }
+                    };
+            var offValues = new Dictionary<string, string>
+                    {
+                        { "text", "" }
+                    };
+            onContent = new FormUrlEncodedContent(onValues);
+            offContent = new FormUrlEncodedContent(offValues);
             if (InputInterceptor.CheckDriverInstalled())
             {
                 Console.WriteLine("Input interceptor seems to be installed.");
@@ -266,19 +291,119 @@ namespace VirtualHapticRouter
             }
             
         }
+
+        private static void onConnect(object sender, EventArgs e)
+        {
+
+            var streamStatus = _obs.GetStreamingStatus();
+            /* 
+            if (streamStatus.IsStreaming)
+                onStreamingStateChange(_obs, OutputState.Started);
+            else
+                onStreamingStateChange(_obs, OutputState.Stopped);
+
+            if (streamStatus.IsRecording)
+                onRecordingStateChange(_obs, OutputState.Started);
+            else
+                onRecordingStateChange(_obs, OutputState.Stopped);
+            */
+        }
+
+        protected static void onStreamData(OBSWebsocket sender, StreamStatus data)
+        {
+            Console.WriteLine(data);
+        }
+
+        protected static void onDisconnect(object sender, EventArgs e)
+        {
+            throw new Exception("disconnected");
+        }
+        /*
+        private static void onStreamingStateChange(OBSWebsocket sender, OutputState newState)
+        {
+            string state = "";
+            switch (newState)
+            {
+                case OutputState.Starting:
+                    state = "Stream starting...";
+                    break;
+
+                case OutputState.Started:
+                    state = "Stop streaming";
+                    break;
+
+                case OutputState.Stopping:
+                    state = "Stream stopping...";
+                    break;
+
+                case OutputState.Stopped:
+                    state = "Start streaming";
+                    break;
+
+                default:
+                    state = "State unknown";
+                    break;
+            }
+        }
+        */
+
+        /*
+        private static void onRecordingStateChange(OBSWebsocket sender, OutputState newState)
+        {
+            string state = "";
+            switch (newState)
+            {
+                case OutputState.Starting:
+                    state = "Recording starting...";
+                    break;
+
+                case OutputState.Started:
+                    state = "Stop recording";
+                    break;
+
+                case OutputState.Stopping:
+                    state = "Recording stopping...";
+                    break;
+
+                case OutputState.Stopped:
+                    state = "Start recording";
+                    break;
+
+                default:
+                    state = "State unknown";
+                    break;
+            }
+        }
+        */
+
+        static async Task closeCaption(CancellationToken token)
+        {
+            await Task.Delay(100, timeout.Token);
+            _obs.SendCaptions("");
+            timeout = null;
+        }
+
         static void FeedbackEventHandler(object sender, Xbox360FeedbackReceivedEventArgs e)
         {
             if (e.SmallMotor > 0)
             {
                 Console.WriteLine(e.SmallMotor);
+                if (timeout == null)
+                {
+                    _obs.SendCaptions("███ ███ ███");
+                } else
+                {
+                    timeout.Cancel();
+                }
+                timeout = new CancellationTokenSource();
+                closeCaption(timeout.Token);
+
+                /*
                 var values = new Dictionary<string, string>
                 {
                     { "Value1", e.SmallMotor.ToString() },
                     // { "Value2", e.LargeMotor.ToString() }
                 };
-                var content = new FormUrlEncodedContent(values);
-                var ontext = "███ ███ ███";
-                var offtext = "";
 
                 try
                 {
@@ -288,6 +413,9 @@ namespace VirtualHapticRouter
                     Console.WriteLine(netErr);
                     throw netErr;
                 }
+                */
+
+
             }
         }
     }
