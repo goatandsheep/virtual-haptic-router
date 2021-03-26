@@ -33,11 +33,20 @@ namespace VirtualHapticRouter
 
             _obs = new OBSWebsocket();
 
+            _obs.Connect("ws://localhost:4444", "");
+
             _obs.Connected += onConnect;
             _obs.Disconnected += onDisconnect;
 
-            _obs.StreamStatus += onStreamData;
-
+            // _obs.StreamStatus += onStreamData;
+            try
+            {
+                _obs.SendCaptions("test");
+            } catch (Exception err)
+            {
+                Console.WriteLine(err);
+            }
+            /*
             var onValues = new Dictionary<string, string>
                     {
                         { "text", "███ ███ ███" }
@@ -48,6 +57,7 @@ namespace VirtualHapticRouter
                     };
             onContent = new FormUrlEncodedContent(onValues);
             offContent = new FormUrlEncodedContent(offValues);
+            
             if (InputInterceptor.CheckDriverInstalled())
             {
                 Console.WriteLine("Input interceptor seems to be installed.");
@@ -262,19 +272,18 @@ namespace VirtualHapticRouter
                         controller.SetButtonState(Xbox360Button.Start, false);
                     }
                 }
-                /*controller.SetButtonState(Xbox360Button.A, true);
-                controller.SetButtonState(Xbox360Button.B, true);
-                controller.SetButtonState(Xbox360Button.X, true);*/
             });
+            */
 
             Console.WriteLine("Virtual gamepad connected");
 
             Console.WriteLine("Hooks enabled. Press any key to release.");
             Console.ReadKey();
+            controller.Disconnect();
+
+            /*
             keyboardHook.Dispose();
             mouseHook.Dispose();
-            controller.Disconnect();
-            
             while (true)
             {
                 try {
@@ -285,17 +294,21 @@ namespace VirtualHapticRouter
                     Thread.Sleep(20);
                 } catch (Exception err)
                 {
+                    keyboardHook.Dispose();
+                    mouseHook.Dispose();
                     controller.Disconnect();
                     throw err;
                 }
             }
-            
+            */
+
         }
 
         private static void onConnect(object sender, EventArgs e)
         {
 
             var streamStatus = _obs.GetStreamingStatus();
+            Console.WriteLine("Connected to OBS");
             /* 
             if (streamStatus.IsStreaming)
                 onStreamingStateChange(_obs, OutputState.Started);
@@ -379,43 +392,59 @@ namespace VirtualHapticRouter
         static async Task closeCaption(CancellationToken token)
         {
             await Task.Delay(100, timeout.Token);
-            _obs.SendCaptions("");
+            try
+            {
+                _obs.SendCaptions("");
+            } catch(Exception err)
+            {
+                Console.WriteLine(err);
+            }
             timeout = null;
         }
 
         static void FeedbackEventHandler(object sender, Xbox360FeedbackReceivedEventArgs e)
         {
-            if (e.SmallMotor > 0)
+            try
             {
-                Console.WriteLine(e.SmallMotor);
-                if (timeout == null)
+                if (e.SmallMotor > 0)
                 {
-                    _obs.SendCaptions("███ ███ ███");
-                } else
-                {
-                    timeout.Cancel();
+                    Console.WriteLine(e.SmallMotor);
+                    if (timeout == null)
+                    {
+                        _obs.SendCaptions("███ ███ ███");
+                    }
+                    else
+                    {
+                        timeout.Cancel();
+                    }
+                    timeout = new CancellationTokenSource();
+                    closeCaption(timeout.Token);
+
+                    /*
+                    var values = new Dictionary<string, string>
+                    {
+                        { "Value1", e.SmallMotor.ToString() },
+                        // { "Value2", e.LargeMotor.ToString() }
+                    };
+
+                    try
+                    {
+                        var response = client.PostAsync("https://maker.ifttt.com/trigger/rumble/with/key/dDYeWn9kg-rcdgvxBG4fnu", content);
+                    }
+                    catch (Exception netErr)
+                    {
+                        Console.WriteLine(netErr);
+                        throw netErr;
+                    }
+                    */
+
+
                 }
-                timeout = new CancellationTokenSource();
-                closeCaption(timeout.Token);
-
-                /*
-                var values = new Dictionary<string, string>
-                {
-                    { "Value1", e.SmallMotor.ToString() },
-                    // { "Value2", e.LargeMotor.ToString() }
-                };
-
-                try
-                {
-                    var response = client.PostAsync("https://maker.ifttt.com/trigger/rumble/with/key/dDYeWn9kg-rcdgvxBG4fnu", content);
-                } catch (Exception netErr)
-                {
-                    Console.WriteLine(netErr);
-                    throw netErr;
-                }
-                */
-
-
+            }
+            catch (Exception netErr)
+            {
+                Console.WriteLine(netErr);
+                throw netErr;
             }
         }
     }
