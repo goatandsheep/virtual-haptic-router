@@ -284,6 +284,7 @@ namespace VirtualHapticRouter
 
             // keyboardHook.Dispose();
             // mouseHook.Dispose();
+            /*
             int counter = 0;
             while (true)
             {
@@ -292,9 +293,11 @@ namespace VirtualHapticRouter
                     // Xbox360Report controller1Report = new Xbox360Report();
 
                     // controller.SubmitReport(controller1Report);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
             
                     _obs.SendCaptions("test" + counter);
+                    Thread.Sleep(1000);
+                    _obs.SendCaptions("");
                     counter++;
                 } catch (Exception err)
                 {
@@ -304,6 +307,8 @@ namespace VirtualHapticRouter
                     throw err;
                 }
             }
+            */
+            
             
 
         }
