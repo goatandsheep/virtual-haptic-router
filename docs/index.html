@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+  <script src="index.js"></script>
+  <link rel="stylesheet" href="index.css" />
+  <title>virtual haptic router test</title>
+</head>
+<body>
+  <h1>virtual haptic router test</h1>
+<!-- Add a placeholder for the Twitch embed -->
+<div id="twitch-embed"></div>
+<a href="https://github.com/goatandsheep/virtual-haptic-router">Code</a>
+</body>
+
+<!-- Load the Twitch embed script -->
+<script src="https://player.twitch.tv/js/embed/v1.js"></script>
+
+<!-- Create a Twitch.Player object. This will render within the placeholder div -->
+<script type="text/javascript">
+  new Twitch.Player("twitch-embed", {
+    channel: "vuvuze1a"
+  });
+</script>

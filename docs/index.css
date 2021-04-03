@@ -1,0 +1,26 @@
+body {
+    text-align: center;
+    padding: 100px 0 0 0;
+}
+
+.video-shake-active {
+    animation: rotation 0.075s infinite linear;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(2deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+    75% {
+        transform: rotate(-2deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}

@@ -279,11 +279,6 @@ namespace VirtualHapticRouter
 
             Console.WriteLine("Hooks enabled. Press any key to release.");
             Console.ReadKey();
-            controller.Disconnect();
-
-
-            // keyboardHook.Dispose();
-            // mouseHook.Dispose();
             /*
             int counter = 0;
             while (true)
@@ -308,8 +303,10 @@ namespace VirtualHapticRouter
                 }
             }
             */
-            
-            
+
+            // keyboardHook.Dispose();
+            // mouseHook.Dispose();
+            controller.Disconnect();
 
         }
 
